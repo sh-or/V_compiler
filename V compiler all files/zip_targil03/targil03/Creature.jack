@@ -1,0 +1,103 @@
+/** Implements a graphical pacman creature. */
+class Creature {
+
+   field int x, y; // screen location of the creature's center
+   field int size; // radius of this creature, in pixels
+
+   /** Constructs a new creature with a given location and size. */
+   constructor Creature new(int Ax, int Ay, int Asize) {
+      let x = Ax;
+      let y = Ay;
+      let size = Asize;
+      do draw();
+      return this;
+   }
+
+      /** get x. */
+   method int getX() {
+     return x;
+   }
+        /** get y. */
+   method int getY() {
+     return y;
+   }
+
+      /** get size. */
+   method int getSize() {
+     return size;
+   }
+
+   /** Disposes this creature. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Draws the creature on the screen. */
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, size);
+	  do Screen.setColor(false);
+	  do Screen.drawRectangle(x, y, x + size, size/5 + y );
+      return;
+   }
+
+   /** Erases the creature from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, size);
+      return;
+   }
+
+    /** Increments the creature size by 2 pixels. */
+   method void incSize() {
+      if (((y + size+2) < 255) & ((x + size+2) < 511)) {
+         do erase();
+         let size = size + 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the creature up by 2 pixels. */
+   method void moveUp() {
+      if ((y - size) > 1) {
+         do erase();
+         let y = y - 2;
+         do draw();
+      }
+      return;
+   }
+
+
+   /** Moves the creature down by 2 pixels. */
+   method void moveDown() {
+      if ((y + size + 2) < 256) {
+         do erase();
+         let y = y + 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the creature left by 2 pixels. */
+   method void moveLeft() {
+      if ((x - size) > 1) {
+         do erase();
+         let x = x - 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the creature right by 2 pixels. */
+   method void moveRight() {
+      if ((x + size + 2) < 512) {
+         do erase();
+         let x = x + 2;
+         do draw();
+      }
+      return;
+   }
+}
+

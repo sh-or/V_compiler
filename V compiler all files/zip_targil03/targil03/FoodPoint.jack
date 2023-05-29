@@ -1,0 +1,44 @@
+/** Implements a graphical food point. */
+class FoodPoint {
+   field int x, y; // screen location of the point's center
+   field int size; // radius of the food point, in pixels
+
+   /** Constructs a new point with a given location and size. */
+   constructor FoodPoint new(int Ax, int Ay, int Asize) {
+      let x = Ax;
+      let y = Ay;
+      let size = Asize;
+      //do draw();
+      return this;
+   }
+
+      /** get x. */
+   method int getX() {
+     return x;
+   }
+        /** get y. */
+   method int getY() {
+     return y;
+   }
+
+   /** Disposes this point. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Draws the point on the screen. */
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, size);
+      return;
+   }
+
+   /** Erases the point from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, size);
+      return;
+   }
+}
+

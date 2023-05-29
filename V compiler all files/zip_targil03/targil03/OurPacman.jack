@@ -1,0 +1,157 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/Square/SquareGame.jack
+
+/**
+ * Implements the Square Dance game.
+ * This simple game allows the user to move a black square around
+ * the screen, and change the square's size during the movement.
+ * When the game starts, a square of 30 by 30 pixels is shown at the
+ * top-left corner of the screen. The user controls the square as follows.
+ * The 4 arrow keys are used to move the square up, down, left, and right.
+ * The 'z' and 'x' keys are used, respectively, to decrement and increment
+ * the square's size. The 'q' key is used to quit the game.
+ */
+
+class OurPacman{
+   field Creature creature; // the creature of this game
+   field int direction; // the creature's current direction: 
+                        // 0=none, 1=up, 2=down, 3=left, 4=right
+   field FoodPoint point;	// the pacman's "food"
+   field FoodPoint point2;
+   field FoodPoint point3;
+   field Array arr;
+   field int pointCounter;
+   
+   /** Constructs a new Pacman Game. */
+   constructor OurPacman new() {
+      // Creates a 50 by 50 pixels creature and positions it at the top-left
+      // of the screen.
+      let creature = Creature.new(25, 25, 25);
+      let direction = 0;  // initial state is no movement
+	  let point = FoodPoint.new(150, 150,8); //reset the first food point
+	  let point2=FoodPoint.new(200, 400,8);
+	  let point3=FoodPoint.new(30, 250,8);
+	  /**
+	  let arr = Array.new(5);
+	  let arr[0]=FoodPoint.new(200, 400,8);
+	  let arr[1]=FoodPoint.new(30, 250,8);
+	  let arr[2]=FoodPoint.new(150, 80,8);
+	  let arr[3]=FoodPoint.new(250, 250,8);
+	  let arr[4]=FoodPoint.new(50, 400,8);
+	  */
+	  let pointCounter=0;
+      return this;
+   }
+
+   /** Disposes this game. */
+   method void dispose() {
+      do creature.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Moves the creature in the current direction. */
+   method void move() {
+      if (direction = 1) { do creature.moveUp(); }
+      if (direction = 2) { do creature.moveDown(); }
+      if (direction = 3) { do creature.moveLeft(); }
+      if (direction = 4) { do creature.moveRight(); }
+      return;
+   }
+   
+	//the func create win screen
+   method void win() { 
+		var boolean eye;
+		var Creature winner;
+		var char key;  // the key currently pressed by the user
+		var boolean exit;
+		let eye = false;
+		let winner = Creature.new(230, 120, 90);
+		
+		let exit = false;
+		do Screen.clearScreen(); //clean screen
+		do winner.draw();
+				
+		while (~exit) {
+			do Screen.setColor(eye);
+			let eye = ~eye;
+			do Screen.drawCircle(winner.getX(), winner.getY()-25, 10 );
+			do Sys.wait(10);  // delays the next movement
+			let key = Keyboard.keyPressed();
+			if (key = 81)  { let exit = true; }     // q key
+		}
+		return;
+   }
+   
+   /** tiny winner screen
+   method void winDraw(int location) {
+		var int memAddress;
+		let memAddress = 16384 + location;
+		do Memory.poke(memAddress + 0, 0);
+		do Memory.poke(memAddress + 32, 0);
+		do Memory.poke(memAddress + 64, 0);
+		do Memory.poke(memAddress + 96, 19362);
+		do Memory.poke(memAddress + 128, 23210);
+		do Memory.poke(memAddress + 160, 27306);
+		do Memory.poke(memAddress + 192, 19390);
+		do Memory.poke(memAddress + 224, 0);
+		do Memory.poke(memAddress + 256, 0);
+		do Memory.poke(memAddress + 288, 896);
+		do Memory.poke(memAddress + 320, 1728);
+		do Memory.poke(memAddress + 352, 1984);
+		do Memory.poke(memAddress + 384, 192);
+		do Memory.poke(memAddress + 416, 1984);
+		do Memory.poke(memAddress + 448, 896);
+		do Memory.poke(memAddress + 480, 0);
+		return;
+	}*/
+
+   /** Runs the game: handles the user's inputs and moves the creature accordingly */
+   method void run() {
+      var char key;  // the key currently pressed by the user
+      var boolean exit;
+      let exit = false;
+      do point.draw(); 
+      while (~exit) {
+		 //do arr[pointCounter].draw(); // waits for a key to be pressed
+		//do point.draw(); // waits for a key to be pressed
+         while (key = 0) {
+            let key = Keyboard.keyPressed();
+         }
+         if (key = 81)  { let exit = true; }     // q key
+         if (key = 131) { let direction = 1; }   // up arrow
+         if (key = 133) { let direction = 2; }   // down arrow
+         if (key = 130) { let direction = 3; }   // left arrow
+         if (key = 132) { let direction = 4; }   // right arrow
+
+         // waits for the key to be released
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            do move();
+		 }
+		 //if the creature "eat" the point:
+			//if (((arr[pointCounter]).getX()) < (creature.getX()+size+1)) {//& ((arr[pointCounter].getX()) > (creature.getX()-size-1))){ //& ((arr[pointCounter].y) < (creature.y+size+1)) & ((arr[pointCounter].y) > (creature.y-size-1))) 
+		 if ((point.getX() < (creature.getX()+creature.getSize()+1)) & (((point.getX()) > (creature.getX()-creature.getSize()-1))) & ((point.getY()) < (creature.getY()+creature.getSize()+1)) & ((point.getY()) > (creature.getY()-creature.getSize()-1))) 
+			{
+				do point.erase();
+				do win();
+				let exit=true;
+				/**	
+				let pointCounter = pointCounter+1;
+				do Sys.wait(5);  // delays the next movement
+				if( pointCounter=1) { let point = point2; }
+				else{ if( pointCounter=2) { let point = point3; }
+					  else { do win(); }
+					 }
+				do point.draw();
+				*/
+			}
+		}
+     return;
+   }
+}
+
+
+

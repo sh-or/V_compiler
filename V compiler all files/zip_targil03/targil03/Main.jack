@@ -1,0 +1,11 @@
+/** Initializes a new pacman game and starts running it. */
+class Main {
+    function void main() {
+        var OurPacman game;
+        let game = OurPacman.new();
+        do game.run();
+		do Screen.clearScreen(); //clean screen
+        do game.dispose();
+        return;
+    }
+}
